@@ -1,6 +1,6 @@
 # 在文件头部导入 config
 from core import config
-
+import cmd
 class ChatCLI(cmd.Cmd):
     # ...
     def __init__(self):
