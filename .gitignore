@@ -1,0 +1,38 @@
+# 配置文件（敏感信息）
+config.yml
+*.local.yml
+
+# 数据目录（对话历史）
+data/
+*.db
+*.sqlite3
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 虚拟环境
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 日志
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.temp
