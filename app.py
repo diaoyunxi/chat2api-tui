@@ -36,6 +36,14 @@ class ChatCLI(cmd.Cmd):
         # 从配置读取默认模型
         self.model = config.get("default_model", "deepseek-v4-flash")
         self.supported_models = config.get("supported_models", ["deepseek-v4-flash", "deepseek-v4-pro"])
+        self.conv = Conversation()
+        self.conv.system_prompt = (
+            "你是一个具备调用工具能力的AI助手。\n"
+            "可用工具：read_file, write_file, exec_cmd, ask_user。\n"
+            "当用户请求执行命令、读写文件或需要向用户提问时，你必须使用对应的工具，\n"
+            "并且严格按照函数调用的标准格式（tool_calls）来调用，不要自行输出JSON或模拟结果。\n"
+            "你的回答应基于工具返回的真实数据。"
+        )
 
     # ---------- 核心交互 ----------
     def default(self, line: str):
