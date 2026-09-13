@@ -1,19 +1,19 @@
 """外置工具热加载器：扫描 tools/ 目录，解析文件头部注释，动态导入"""
-import os
-import sys
-import json
 import importlib.util
 import inspect
-from typing import Dict, Any, Callable, Optional
+import json
+import os
+from collections.abc import Callable
+
 
 class ToolLoader:
     def __init__(self, tools_dir: str = "tools"):
         self.tools_dir = tools_dir
-        self._cache: Dict[str, Callable] = {}
-        self._schemas: Dict[str, Dict] = {}
+        self._cache: dict[str, Callable] = {}
+        self._schemas: dict[str, dict] = {}
         self.load_all()
 
-    def _parse_header(self, filepath: str) -> Optional[Dict]:
+    def _parse_header(self, filepath: str) -> dict | None:
         """读取文件头部 # tool: {...} 注释"""
         with open(filepath, "r", encoding="utf-8") as f:
             for line in f:
@@ -98,7 +98,7 @@ class ToolLoader:
             result = self._cache[tool_name](**arguments)
             return str(result) if result is not None else "执行成功（无返回值）"
         except Exception as e:
-            return f"工具执行错误: {str(e)}"
+            return f"工具执行错误: {e!s}"
 
     def reload(self):
         """热加载：清空缓存并重新加载"""

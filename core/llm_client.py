@@ -1,9 +1,10 @@
 # core/llm_client.py
 import base64
-import os
+
 from openai import OpenAI
-from typing import List, Dict, Any, Optional
+
 from core import config  # 新增
+
 
 class LLMClient:
     def __init__(self, base_url: str = None, api_key: str = None):
@@ -17,8 +18,8 @@ class LLMClient:
             api_key=self.api_key
         )
 
-    def chat_completion(self, messages: List[Dict], model: str = None,
-                         tools: Optional[List[Dict]] = None, stream: bool = False):
+    def chat_completion(self, messages: list[dict], model: str = None,
+                         tools: list[dict] | None = None, stream: bool = False):
         if model is None:
             model = config.get("default_model")
         kwargs = {"model": model, "messages": messages, "stream": stream}
@@ -29,7 +30,7 @@ class LLMClient:
 
     # build_multimodal_message 保持不变
     @staticmethod
-    def build_multimodal_message(text: str, image_path: str = None, image_url: str = None) -> Dict:
+    def build_multimodal_message(text: str, image_path: str = None, image_url: str = None) -> dict:
         content = [{"type": "text", "text": text}]
         if image_path:
             with open(image_path, "rb") as f:

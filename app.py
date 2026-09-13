@@ -4,16 +4,14 @@ Chat2API 命令行客户端（简化版）
 支持多模态、工具热加载、智能体循环、对话持久化、模型切换
 命令以 / 开头，普通输入作为消息发送
 """
-import os
-import sys
 import cmd
-from typing import Optional
+import os
 
-from core.llm_client import LLMClient
-from core.tool_loader import ToolLoader
-from core.conversation import Conversation
 from agent import Agent
 from core import config
+from core.conversation import Conversation
+from core.llm_client import LLMClient
+from core.tool_loader import ToolLoader
 
 
 class ChatCLI(cmd.Cmd):
@@ -31,7 +29,7 @@ class ChatCLI(cmd.Cmd):
         self.tool_loader = ToolLoader()
         self.agent = Agent(self.llm, self.tool_loader)
         self.conv = Conversation()
-        self.current_image_path: Optional[str] = None
+        self.current_image_path: str | None = None
         self.use_stream = False
         # 从配置读取默认模型
         self.model = config.get("default_model", "deepseek-v4-flash")
@@ -68,7 +66,7 @@ class ChatCLI(cmd.Cmd):
             response = self.agent.run(self.conv, model=self.model)
             print(response)
         except Exception as e:
-            print(f"\n❌ 错误: {str(e)}")
+            print(f"\n❌ 错误: {e!s}")
 
     # ---------- 命令 ----------
     def do_new(self, arg):

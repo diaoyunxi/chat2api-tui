@@ -1,8 +1,9 @@
 # core/config.py
 """统一配置管理，从 config.yml 读取配置"""
 import os
+from typing import Any
+
 import yaml
-from typing import Any, Dict
 
 CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.yml")
 DEFAULT_CONFIG = {
@@ -13,9 +14,9 @@ DEFAULT_CONFIG = {
     "max_iterations": 10,
 }
 
-_config: Dict[str, Any] = None
+_config: dict[str, Any] = None
 
-def load_config() -> Dict[str, Any]:
+def load_config() -> dict[str, Any]:
     """加载配置文件，如果不存在则使用默认值（并发出警告）"""
     global _config
     if _config is not None:

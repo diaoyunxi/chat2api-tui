@@ -1,12 +1,11 @@
 # agent.py
 """智能体循环：必须调用 stop 工具才结束，否则强制继续"""
 import json
-from typing import List, Dict
 
+from core import config
+from core.conversation import Conversation
 from core.llm_client import LLMClient
 from core.tool_loader import ToolLoader
-from core.conversation import Conversation
-from core import config
 
 
 class Agent:
@@ -84,7 +83,7 @@ class Agent:
         # 达到最大循环次数
         return f"⚠️ 达到最大循环次数 ({self.max_iterations})，任务可能未完全完成。请手动检查。"
 
-    def _ensure_stop_tool(self, tools_schema: List[Dict]) -> List[Dict]:
+    def _ensure_stop_tool(self, tools_schema: list[dict]) -> list[dict]:
         """确保 tools 列表中包含 stop 工具"""
         if not tools_schema:
             # 如果没有任何工具，只返回 stop 工具
@@ -98,7 +97,7 @@ class Agent:
         # 否则添加 stop 工具
         return tools_schema + [self._create_stop_tool()]
 
-    def _create_stop_tool(self) -> Dict:
+    def _create_stop_tool(self) -> dict:
         """创建 stop 工具的定义"""
         return {
             "type": "function",
