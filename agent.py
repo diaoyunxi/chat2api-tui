@@ -1,12 +1,12 @@
 # agent.py
 """智能体循环：必须调用 stop 工具才结束，否则强制继续"""
 import json
-from typing import List, Dict
+from typing import Dict, List
 
+from core import config
+from core.conversation import Conversation
 from core.llm_client import LLMClient
 from core.tool_loader import ToolLoader
-from core.conversation import Conversation
-from core import config
 
 
 class Agent:
