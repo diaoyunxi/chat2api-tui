@@ -1,18 +1,18 @@
 """对话管理：持久化保存/加载"""
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Dict, Optional
 
 DATA_DIR = "data/conversations"
 
 class Conversation:
     def __init__(self, title: str = "新对话"):
-        self.id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.id = datetime.now(tz=timezone.utc).strftime("%Y%m%d_%H%M%S")
         self.title = title
         self.messages: List[Dict] = []
         self.system_prompt: Optional[str] = None
-        self.created_at = datetime.now().isoformat()
+        self.created_at = datetime.now(tz=timezone.utc).isoformat()
 
     def add_message(self, role: str, content: str, tool_calls: List = None):
         msg = {"role": role, "content": content}
