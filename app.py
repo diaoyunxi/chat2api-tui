@@ -4,16 +4,16 @@ Chat2API 命令行客户端（简化版）
 支持多模态、工具热加载、智能体循环、对话持久化、模型切换
 命令以 / 开头，普通输入作为消息发送
 """
+import cmd
 import os
 import sys
-import cmd
 from typing import Optional
 
-from core.llm_client import LLMClient
-from core.tool_loader import ToolLoader
-from core.conversation import Conversation
 from agent import Agent
 from core import config
+from core.conversation import Conversation
+from core.llm_client import LLMClient
+from core.tool_loader import ToolLoader
 
 
 class ChatCLI(cmd.Cmd):

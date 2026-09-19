@@ -1,10 +1,11 @@
 """外置工具热加载器：扫描 tools/ 目录，解析文件头部注释，动态导入"""
-import os
-import sys
-import json
 import importlib.util
 import inspect
-from typing import Dict, Any, Callable, Optional
+import json
+import os
+import sys
+from typing import Any, Callable, Dict, Optional
+
 
 class ToolLoader:
     def __init__(self, tools_dir: str = "tools"):

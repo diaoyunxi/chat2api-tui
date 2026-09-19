@@ -1,8 +1,9 @@
 # core/config.py
 """统一配置管理，从 config.yml 读取配置"""
 import os
-import yaml
 from typing import Any, Dict
+
+import yaml
 
 CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.yml")
 DEFAULT_CONFIG = {

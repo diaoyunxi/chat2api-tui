@@ -1,9 +1,12 @@
 # core/llm_client.py
 import base64
 import os
+from typing import Any, Dict, List, Optional
+
 from openai import OpenAI
-from typing import List, Dict, Any, Optional
+
 from core import config  # 新增
+
 
 class LLMClient:
     def __init__(self, base_url: str = None, api_key: str = None):

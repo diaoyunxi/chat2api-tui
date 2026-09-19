@@ -2,7 +2,7 @@
 import json
 import os
 from datetime import datetime
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
 
 DATA_DIR = "data/conversations"
 
