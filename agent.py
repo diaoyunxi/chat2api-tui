@@ -16,7 +16,7 @@ class Agent:
         self.max_iterations = config.get("max_iterations", 20)
         self.stop_tool_name = "stop"  # 标记任务完成的工具名
 
-    def run(self, conversation: Conversation, model: str = None) -> str:
+    def run(self, conversation: Conversation, model: str | None = None) -> str:
         """
         智能体主循环：只有调用 stop 工具才结束，否则强制继续
         """
@@ -118,7 +118,7 @@ class Agent:
             }
         }
 
-    def run_with_image(self, conversation: Conversation, text: str, image_path: str, model: str = None) -> str:
+    def run_with_image(self, conversation: Conversation, text: str, image_path: str, model: str | None = None) -> str:
         """处理图片消息的多模态版本"""
         if model is None:
             model = config.get("default_model", "deepseek-v4-flash")
