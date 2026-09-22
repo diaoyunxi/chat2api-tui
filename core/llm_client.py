@@ -6,7 +6,7 @@ from typing import List, Dict, Any, Optional
 from core import config  # 新增
 
 class LLMClient:
-    def __init__(self, base_url: str = None, api_key: str = None):
+    def __init__(self, base_url: str | None = None, api_key: str | None = None):
         # 优先使用传入参数，否则从配置文件读取
         self.base_url = base_url or config.get("base_url")
         self.api_key = api_key or config.get("api_key")
@@ -17,7 +17,7 @@ class LLMClient:
             api_key=self.api_key
         )
 
-    def chat_completion(self, messages: List[Dict], model: str = None,
+    def chat_completion(self, messages: List[Dict], model: str | None = None,
                          tools: Optional[List[Dict]] = None, stream: bool = False):
         if model is None:
             model = config.get("default_model")
@@ -29,7 +29,7 @@ class LLMClient:
 
     # build_multimodal_message 保持不变
     @staticmethod
-    def build_multimodal_message(text: str, image_path: str = None, image_url: str = None) -> Dict:
+    def build_multimodal_message(text: str, image_path: str | None = None, image_url: str | None = None) -> Dict:
         content = [{"type": "text", "text": text}]
         if image_path:
             with open(image_path, "rb") as f:

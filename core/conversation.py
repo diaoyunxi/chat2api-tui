@@ -14,7 +14,7 @@ class Conversation:
         self.system_prompt: Optional[str] = None
         self.created_at = datetime.now().isoformat()
 
-    def add_message(self, role: str, content: str, tool_calls: List = None):
+    def add_message(self, role: str, content: str, tool_calls: List | None = None):
         msg = {"role": role, "content": content}
         if tool_calls:
             msg["tool_calls"] = tool_calls
