@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # agent.py
 """智能体循环：必须调用 stop 工具才结束，否则强制继续"""
 import json
