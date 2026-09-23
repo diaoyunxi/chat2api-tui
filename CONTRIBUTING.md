@@ -1,0 +1,17 @@
+# Contributing to chat2api-tui
+
+感谢你对 chat2api-tui 项目的关注！
+
+## 如何贡献
+
+1. Fork 本仓库
+2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'Add amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 创建 Pull Request
+
+## 代码规范
+
+- Python 代码遵循 PEP 8，使用 ruff 进行格式化
+- TUI 界面使用 textual 框架
+- 提交信息使用中文或英文均可
