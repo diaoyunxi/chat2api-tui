@@ -1,6 +1,5 @@
 """外置工具热加载器：扫描 tools/ 目录，解析文件头部注释，动态导入"""
 import os
-import sys
 import json
 import importlib.util
 import inspect
