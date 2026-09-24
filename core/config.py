@@ -11,6 +11,8 @@ DEFAULT_CONFIG = {
     "default_model": "deepseek-v4-flash",
     "supported_models": ["deepseek-v4-flash", "deepseek-v4-pro"],
     "max_iterations": 10,
+    "timeout": 60,
+    "max_retries": 2,
 }
 
 _config: Dict[str, Any] = None
