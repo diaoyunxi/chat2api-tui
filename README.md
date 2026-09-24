@@ -42,8 +42,8 @@ Chat2API 服务端支持以下 AI 服务商：
 ### 1. 克隆项目
 
 ```bash
-git clone https://github.com/yourusername/chat2api-tui-client.git
-cd chat2api-tui-client
+git clone https://github.com/diaoyunxi/chat2api-tui.git
+cd chat2api-tui
 ```
 
 ### 2. 安装 Python 依赖
