@@ -30,7 +30,6 @@ class ChatCLI(cmd.Cmd):
         self.llm = LLMClient()
         self.tool_loader = ToolLoader()
         self.agent = Agent(self.llm, self.tool_loader)
-        self.conv = Conversation()
         self.current_image_path: Optional[str] = None
         self.use_stream = False
         # 从配置读取默认模型
