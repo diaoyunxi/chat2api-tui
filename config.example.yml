@@ -1,19 +1,27 @@
-# Chat2API 客户端配置文件
-# 复制此文件为 config.yml 并填写你的实际值
+# ============================================================
+# chat2api-tui 配置模板
+# 复制此文件为 config.yml 并填入实际值：cp config.example.yml config.yml
+# ============================================================
 
-# Chat2API 服务地址（注意末尾带 /v1）
+# LLM API 基础 URL（兼容 OpenAI API 格式）
 base_url: "http://127.0.0.1:8080/v1"
 
-# 本地 API Key（在 Chat2API Web 管理界面生成）
-api_key: "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+# API Key（必填）
+api_key: ""
 
-# 默认使用的模型（需在 Chat2API 中已添加）
+# 默认模型名称
 default_model: "deepseek-v4-flash"
 
-# 支持的模型列表（用于 /model 命令校验）
+# 支持的模型列表
 supported_models:
   - "deepseek-v4-flash"
   - "deepseek-v4-pro"
 
-# 其他可选配置
+# Agent 最大迭代次数（单次对话中工具调用的最大轮数）
 max_iterations: 10
+
+# 请求超时（秒，默认 60）
+timeout: 60
+
+# 最大重试次数（默认 3）
+max_retries: 3
