@@ -21,7 +21,9 @@ class ToolLoader:
                 if line.startswith("# tool:"):
                     try:
                         return json.loads(line[7:].strip())
-                    except:
+                    except (json.JSONDecodeError, ValueError) as e:
+                        import logging
+                        logging.debug(f"工具元数据解析失败: {e}")
                         return None
                 if not line.startswith("#") and line != "":
                     break
