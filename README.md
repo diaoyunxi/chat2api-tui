@@ -139,7 +139,7 @@ $ python app.py
 
 ### 内置工具
 
-项目默认提供四个内置工具，位于 `tools/` 目录：
+项目默认提供五个内置工具，位于 `tools/` 目录：
 
 | 工具 | 功能 | 文件 |
 |------|------|------|
@@ -147,6 +147,7 @@ $ python app.py
 | `write_file` | 将内容写入指定路径的文件 | `tools/write_file.py` |
 | `exec_cmd` | 执行系统命令并返回输出结果 | `tools/exec_cmd.py` |
 | `ask_user` | 向用户询问问题并等待输入答案 | `tools/ask_user.py` |
+| `stop` | 终止智能体循环，结束当前对话轮次 | `tools/stop.py` |
 
 ### 自定义工具
 
@@ -183,7 +184,8 @@ chat2api-tui-client/
 │   ├── read_file.py
 │   ├── write_file.py
 │   ├── exec_cmd.py
-│   └── ask_user.py
+│   ├── ask_user.py
+│   └── stop.py
 └── data/
     └── conversations/      # 对话历史 JSON 文件
 ```
