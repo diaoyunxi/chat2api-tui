@@ -3,10 +3,10 @@
 def stop(reason: str = "任务已完成") -> str:
     """
     标记任务完成。
-    
+
     Args:
         reason: 完成原因，默认"任务已完成"
-    
+
     Returns:
         固定确认消息
     """

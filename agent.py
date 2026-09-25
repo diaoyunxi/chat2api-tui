@@ -47,7 +47,7 @@ class Agent:
                 # 执行每个工具
                 for tc in msg.tool_calls:
                     tool_name = tc.function.name
-                    
+
                     # 如果是 stop 工具 → 任务完成，结束循环
                     if tool_name == self.stop_tool_name:
                         args = json.loads(tc.function.arguments)
