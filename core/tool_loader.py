@@ -21,7 +21,7 @@ class ToolLoader:
                 if line.startswith("# tool:"):
                     try:
                         return json.loads(line[7:].strip())
-                    except:
+                    except Exception:
                         return None
                 if not line.startswith("#") and line != "":
                     break
