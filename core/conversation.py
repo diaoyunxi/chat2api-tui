@@ -34,7 +34,17 @@ class Conversation:
         os.makedirs(DATA_DIR, exist_ok=True)
         path = os.path.join(DATA_DIR, f"{self.id}.json")
         with open(path, "w", encoding="utf-8") as f:
-            json.dump(self.__dict__, f, ensure_ascii=False, indent=2)
+            # 原子写入：先写临时文件再替换，防止进程中断导致对话历史损坏
+            import tempfile
+            dir_path = os.path.dirname(self.save_path)
+            fd, tmp_path = tempfile.mkstemp(dir=dir_path, suffix='.tmp')
+            try:
+                with os.fdopen(fd, 'w', encoding='utf-8') as tmp_f:
+                    json.dump(self.__dict__, tmp_f, ensure_ascii=False, indent=2)
+                os.replace(tmp_path, self.save_path)
+            except Exception:
+                os.unlink(tmp_path)
+                raise
 
     @classmethod
     def load(cls, filepath: str) -> "Conversation":
