@@ -139,7 +139,7 @@ $ python app.py
 
 ### 内置工具
 
-项目默认提供四个内置工具，位于 `tools/` 目录：
+项目默认提供五个内置工具，位于 `tools/` 目录：
 
 | 工具 | 功能 | 文件 |
 |------|------|------|
@@ -147,6 +147,7 @@ $ python app.py
 | `write_file` | 将内容写入指定路径的文件 | `tools/write_file.py` |
 | `exec_cmd` | 执行系统命令并返回输出结果 | `tools/exec_cmd.py` |
 | `ask_user` | 向用户询问问题并等待输入答案 | `tools/ask_user.py` |
+| `stop` | 标记任务完成，结束智能体循环 | `tools/stop.py` |
 
 ### 自定义工具
 
