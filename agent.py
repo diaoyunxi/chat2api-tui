@@ -27,7 +27,7 @@ class Agent:
         tools_schema = self.tools.get_tools_schema()
         tools_with_stop = self._ensure_stop_tool(tools_schema)
 
-        for iteration in range(self.max_iterations):
+        for _iteration in range(self.max_iterations):
             response = self.llm.chat_completion(
                 messages,
                 model=model,
