@@ -37,7 +37,9 @@ class ToolLoader:
 
     def _load_tool(self, filepath: str):
         """动态加载单个工具"""
-        spec = importlib.util.spec_from_file_location("tool_module", filepath)
+        # 使用文件名作为唯一模块名，避免所有工具共享 "tool_module" 导致互相覆盖
+        module_name = f"chat2api_tool_{os.path.splitext(os.path.basename(filepath))[0]}"
+        spec = importlib.util.spec_from_file_location(module_name, filepath)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
@@ -102,6 +104,10 @@ class ToolLoader:
 
     def reload(self):
         """热加载：清空缓存并重新加载"""
+        # 清理 sys.modules 中已注册的工具模块，防止重载时拿到旧代码
+        for key in list(sys.modules):
+            if key.startswith("chat2api_tool_"):
+                del sys.modules[key]
         self._cache.clear()
         self._schemas.clear()
         self.load_all()
