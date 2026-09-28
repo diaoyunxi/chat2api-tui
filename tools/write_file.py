@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # tool: {"name": "write_file", "description": "将内容写入指定路径的文件"}
 import os
 

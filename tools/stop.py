@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # tool: {"name": "stop", "description": "当任务已经完全完成时调用此工具，表示不再需要继续执行任何操作"}
 
 def stop(reason: str = "任务已完成") -> str:

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # core/llm_client.py
 import base64
 import os
