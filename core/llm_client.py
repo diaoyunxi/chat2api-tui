@@ -1,8 +1,7 @@
 # core/llm_client.py
 import base64
-import os
 from openai import OpenAI
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Optional
 from core import config  # 新增
 
 class LLMClient:
