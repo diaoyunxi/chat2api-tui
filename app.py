@@ -5,7 +5,6 @@ Chat2API 命令行客户端（简化版）
 命令以 / 开头，普通输入作为消息发送
 """
 import os
-import sys
 import cmd
 from typing import Optional
 
