@@ -16,8 +16,8 @@ class ToolLoader:
     def _parse_header(self, filepath: str) -> Optional[Dict]:
         """读取文件头部 # tool: {...} 注释"""
         with open(filepath, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
+            for raw_line in f:
+                line = raw_line.strip()
                 if line.startswith("# tool:"):
                     try:
                         return json.loads(line[7:].strip())
