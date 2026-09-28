@@ -1,6 +1,7 @@
 """对话管理：持久化保存/加载"""
 import json
 import os
+import time
 from datetime import datetime
 from typing import List, Dict, Optional
 
@@ -8,11 +9,25 @@ DATA_DIR = "data/conversations"
 
 class Conversation:
     def __init__(self, title: str = "新对话"):
-        self.id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.id = self._generate_unique_id()
         self.title = title
         self.messages: List[Dict] = []
         self.system_prompt: Optional[str] = None
         self.created_at = datetime.now().isoformat()
+
+    @staticmethod
+    def _generate_unique_id() -> str:
+        """生成唯一对话 ID，避免同一秒内创建多个对话时 ID 碰撞。
+
+        使用时间戳精确到微秒 + 碰撞检测：若目标文件已存在，追加递增后缀。
+        """
+        base = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+        candidate = base
+        suffix = 1
+        while os.path.exists(os.path.join(DATA_DIR, f"{candidate}.json")):
+            candidate = f"{base}_{suffix}"
+            suffix += 1
+        return candidate
 
     def add_message(self, role: str, content: str, tool_calls: List = None):
         msg = {"role": role, "content": content}
