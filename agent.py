@@ -47,17 +47,25 @@ class Agent:
                 # 执行每个工具
                 for tc in msg.tool_calls:
                     tool_name = tc.function.name
-                    
+
+                    # 安全解析参数：LLM 可能返回畸形 JSON，不能因此崩溃
+                    try:
+                        args = json.loads(tc.function.arguments)
+                    except (json.JSONDecodeError, ValueError) as e:
+                        print(f"⚠️ 工具 {tool_name} 参数解析失败: {e}")
+                        conversation.add_tool_result(
+                            tc.id, f"参数解析失败: {e}，原始参数: {tc.function.arguments}"
+                        )
+                        continue
+
                     # 如果是 stop 工具 → 任务完成，结束循环
                     if tool_name == self.stop_tool_name:
-                        args = json.loads(tc.function.arguments)
-                        final_reason = args.get("reason", "任务已完成")
+                        final_reason = args.get("reason", "任务已完成") if isinstance(args, dict) else str(args)
                         # 将 stop 工具结果也加入历史（便于记录）
                         conversation.add_tool_result(tc.id, f"任务完成: {final_reason}")
                         return f"✅ 任务已按计划完成: {final_reason}"
 
                     # 执行其他工具
-                    args = json.loads(tc.function.arguments)
                     print(f"🔧 调用工具: {tool_name}({args})")
                     result = self.tools.execute(tool_name, args)
                     conversation.add_tool_result(tc.id, result)
