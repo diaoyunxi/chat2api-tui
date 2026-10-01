@@ -2,7 +2,9 @@
 import os
 
 def write_file(path: str, content: str) -> str:
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+    dir_name = os.path.dirname(path)
+    if dir_name:
+        os.makedirs(dir_name, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
     return f"已成功写入: {path}"
