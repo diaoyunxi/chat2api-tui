@@ -19,6 +19,7 @@ class Agent:
     def run(self, conversation: Conversation, model: str = None) -> str:
         """
         智能体主循环：只有调用 stop 工具才结束，否则强制继续
+        连续 3 次未调用任何工具时提前终止，防止空转浪费 API 配额
         """
         if model is None:
             model = config.get("default_model", "deepseek-v4-flash")
@@ -26,6 +27,10 @@ class Agent:
         messages = conversation.to_openai_format()
         tools_schema = self.tools.get_tools_schema()
         tools_with_stop = self._ensure_stop_tool(tools_schema)
+
+        # 连续无工具调用计数器，达到阈值时终止循环防止空转
+        no_tool_streak = 0
+        MAX_NO_TOOL_STREAK = 3
 
         for iteration in range(self.max_iterations):
             response = self.llm.chat_completion(
@@ -38,6 +43,7 @@ class Agent:
 
             # ----- 情况1：检测到工具调用 -----
             if choice.finish_reason == "tool_calls" and msg.tool_calls:
+                no_tool_streak = 0  # 重置连续无工具调用计数
                 # 将助手消息加入历史
                 if hasattr(msg, 'model_dump'):
                     conversation.messages.append(msg.model_dump())
@@ -68,9 +74,17 @@ class Agent:
 
             # ----- 情况2：没有工具调用（finish_reason == "stop"）-----
             # 模型输出了普通文本，但没有调用任何工具，包括 stop
+            no_tool_streak += 1
             final_text = msg.content or ""
             if not conversation.messages or conversation.messages[-1].get("role") != "assistant":
                 conversation.add_message("assistant", final_text)
+
+            # 连续多次无工具调用 → 模型可能陷入文本空转，提前终止
+            if no_tool_streak >= MAX_NO_TOOL_STREAK:
+                return (
+                    f"⚠️ 模型连续 {MAX_NO_TOOL_STREAK} 次未调用任何工具，"
+                    f"判定为空转，提前终止。最后输出: {final_text[:200]}"
+                )
 
             # 强制要求调用 stop 或继续执行
             conversation.add_message(
