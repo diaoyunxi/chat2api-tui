@@ -2,6 +2,7 @@
 import os
 import sys
 import json
+import uuid
 import importlib.util
 import inspect
 from typing import Dict, Any, Callable, Optional
@@ -11,13 +12,14 @@ class ToolLoader:
         self.tools_dir = tools_dir
         self._cache: Dict[str, Callable] = {}
         self._schemas: Dict[str, Dict] = {}
+        self._sys_module_names: Dict[str, str] = {}  # tool_name -> sys.modules key
         self.load_all()
 
     def _parse_header(self, filepath: str) -> Optional[Dict]:
         """读取文件头部 # tool: {...} 注释"""
         with open(filepath, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
+            for raw_line in f:
+                line = raw_line.strip()
                 if line.startswith("# tool:"):
                     try:
                         return json.loads(line[7:].strip())
@@ -37,11 +39,7 @@ class ToolLoader:
 
     def _load_tool(self, filepath: str):
         """动态加载单个工具"""
-        spec = importlib.util.spec_from_file_location("tool_module", filepath)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-
-        # 解析头部声明
+        # 解析头部声明（先解析再导入，避免导入失败的工具污染 sys.modules）
         meta = self._parse_header(filepath)
         if not meta:
             return
@@ -49,6 +47,13 @@ class ToolLoader:
         tool_name = meta.get("name")
         if not tool_name:
             return
+
+        # 使用唯一模块名防止 sys.modules 覆盖冲突 (CWE-772)
+        module_name = f"chat2api_tool_{tool_name}_{uuid.uuid4().hex[:8]}"
+        spec = importlib.util.spec_from_file_location(module_name, filepath)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = module
+        spec.loader.exec_module(module)
 
         # 查找函数（约定与 tool_name 同名或第一个函数）
         func = getattr(module, tool_name, None)
@@ -58,6 +63,8 @@ class ToolLoader:
                     func = getattr(module, attr)
                     break
         if not func:
+            # 清理解析成功但未找到函数的模块
+            sys.modules.pop(module_name, None)
             return
 
         # 自动生成 JSON Schema
@@ -85,6 +92,7 @@ class ToolLoader:
             }
         }
         self._cache[tool_name] = func
+        self._sys_module_names[tool_name] = module_name
 
     def get_tools_schema(self) -> list:
         """返回所有工具的 OpenAI 格式 Schema 列表"""
@@ -101,7 +109,11 @@ class ToolLoader:
             return f"工具执行错误: {str(e)}"
 
     def reload(self):
-        """热加载：清空缓存并重新加载"""
+        """热加载：清空缓存并重新加载，同时清理 sys.modules 防止泄漏 (CWE-772)"""
+        # 清理旧的动态模块引用
+        for sys_mod_name in self._sys_module_names.values():
+            sys.modules.pop(sys_mod_name, None)
+        self._sys_module_names.clear()
         self._cache.clear()
         self._schemas.clear()
         self.load_all()
