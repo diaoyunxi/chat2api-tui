@@ -37,9 +37,25 @@ class ToolLoader:
 
     def _load_tool(self, filepath: str):
         """动态加载单个工具"""
-        spec = importlib.util.spec_from_file_location("tool_module", filepath)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
+        filename = os.path.basename(filepath)
+        # 使用唯一模块名防止 sys.modules 覆盖冲突
+        module_name = f"tool_{filename[:-3]}_{id(filepath)}"
+        try:
+            spec = importlib.util.spec_from_file_location(module_name, filepath)
+            if spec is None or spec.loader is None:
+                print(f"⚠️ 无法加载工具模块: {filepath}（spec 为空）")
+                return
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+        except SyntaxError as e:
+            print(f"⚠️ 工具模块语法错误，跳过: {filepath}（{e}）")
+            return
+        except ImportError as e:
+            print(f"⚠️ 工具模块导入失败，跳过: {filepath}（{e}）")
+            return
+        except Exception as e:
+            print(f"⚠️ 工具模块加载失败，跳过: {filepath}（{e}）")
+            return
 
         # 解析头部声明
         meta = self._parse_header(filepath)
