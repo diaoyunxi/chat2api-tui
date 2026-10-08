@@ -82,7 +82,11 @@ class Agent:
             continue
 
         # 达到最大循环次数
-        return f"⚠️ 达到最大循环次数 ({self.max_iterations})，任务可能未完全完成。请手动检查。"
+        warning_msg = f"⚠️ 达到最大循环次数 ({self.max_iterations})，任务可能未完全完成。请手动检查。"
+        # 将警告消息加入对话历史，防止最终状态丢失 (CWE-682)
+        if not conversation.messages or conversation.messages[-1].get("role") != "assistant":
+            conversation.add_message("assistant", warning_msg)
+        return warning_msg
 
     def _ensure_stop_tool(self, tools_schema: List[Dict]) -> List[Dict]:
         """确保 tools 列表中包含 stop 工具"""
