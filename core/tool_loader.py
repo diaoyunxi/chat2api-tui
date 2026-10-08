@@ -2,6 +2,7 @@
 import os
 import sys
 import json
+import uuid
 import importlib.util
 import inspect
 from typing import Dict, Any, Callable, Optional
@@ -11,6 +12,7 @@ class ToolLoader:
         self.tools_dir = tools_dir
         self._cache: Dict[str, Callable] = {}
         self._schemas: Dict[str, Dict] = {}
+        self._module_names: Dict[str, str] = {}  # tool_name -> sys.modules 中的模块名
         self.load_all()
 
     def _parse_header(self, filepath: str) -> Optional[Dict]:
@@ -21,7 +23,7 @@ class ToolLoader:
                 if line.startswith("# tool:"):
                     try:
                         return json.loads(line[7:].strip())
-                    except:
+                    except (json.JSONDecodeError, ValueError):
                         return None
                 if not line.startswith("#") and line != "":
                     break
@@ -37,8 +39,11 @@ class ToolLoader:
 
     def _load_tool(self, filepath: str):
         """动态加载单个工具"""
-        spec = importlib.util.spec_from_file_location("tool_module", filepath)
+        # 使用 uuid 生成唯一模块名，避免多个工具共用同一模块名导致 sys.modules 覆盖冲突 (CWE-772)
+        module_name = f"tool_module_{uuid.uuid4().hex[:8]}"
+        spec = importlib.util.spec_from_file_location(module_name, filepath)
         module = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = module
         spec.loader.exec_module(module)
 
         # 解析头部声明
@@ -85,6 +90,7 @@ class ToolLoader:
             }
         }
         self._cache[tool_name] = func
+        self._module_names[tool_name] = module_name
 
     def get_tools_schema(self) -> list:
         """返回所有工具的 OpenAI 格式 Schema 列表"""
@@ -102,6 +108,10 @@ class ToolLoader:
 
     def reload(self):
         """热加载：清空缓存并重新加载"""
+        # 清理 sys.modules 中已注册的动态模块，防止内存泄漏 (CWE-772)
+        for module_name in self._module_names.values():
+            sys.modules.pop(module_name, None)
+        self._module_names.clear()
         self._cache.clear()
         self._schemas.clear()
         self.load_all()
