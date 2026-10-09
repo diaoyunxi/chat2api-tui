@@ -21,7 +21,7 @@ class ToolLoader:
                 if line.startswith("# tool:"):
                     try:
                         return json.loads(line[7:].strip())
-                    except:
+                    except (json.JSONDecodeError, ValueError):
                         return None
                 if not line.startswith("#") and line != "":
                     break
@@ -38,8 +38,15 @@ class ToolLoader:
     def _load_tool(self, filepath: str):
         """动态加载单个工具"""
         spec = importlib.util.spec_from_file_location("tool_module", filepath)
+        if spec is None or spec.loader is None:
+            print(f"[ToolLoader] 无法加载模块: {filepath}（spec 为空）")
+            return
         module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
+        try:
+            spec.loader.exec_module(module)
+        except Exception as e:
+            print(f"[ToolLoader] 加载工具模块 {filepath} 失败: {e}")
+            return
 
         # 解析头部声明
         meta = self._parse_header(filepath)
