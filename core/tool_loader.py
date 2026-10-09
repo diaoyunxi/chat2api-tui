@@ -98,7 +98,7 @@ class ToolLoader:
             result = self._cache[tool_name](**arguments)
             return str(result) if result is not None else "执行成功（无返回值）"
         except Exception as e:
-            return f"工具执行错误: {str(e)}"
+            return f"工具执行错误: {type(e).__name__}"
 
     def reload(self):
         """热加载：清空缓存并重新加载"""

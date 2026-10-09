@@ -2,7 +2,12 @@
 import os
 
 def write_file(path: str, content: str) -> str:
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(content)
-    return f"已成功写入: {path}"
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(content)
+        return f"已成功写入: {path}"
+    except PermissionError:
+        return "写入失败: 权限不足"
+    except OSError as e:
+        return f"写入失败: {type(e).__name__}"
