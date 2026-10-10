@@ -34,8 +34,12 @@ class ChatCLI(cmd.Cmd):
         # 从配置读取默认模型
         self.model = config.get("default_model", "deepseek-v4-flash")
         self.supported_models = config.get("supported_models", ["deepseek-v4-flash", "deepseek-v4-pro"])
-        self.conv = Conversation()
-        self.conv.system_prompt = (
+        self.conv.system_prompt = self._default_system_prompt()
+
+    @staticmethod
+    def _default_system_prompt() -> str:
+        """新建对话时使用的默认系统提示词"""
+        return (
             "你是一个具备调用工具能力的AI助手。\n"
             "可用工具：read_file, write_file, exec_cmd, ask_user。\n"
             "当用户请求执行命令、读写文件或需要向用户提问时，你必须使用对应的工具，\n"
@@ -74,6 +78,7 @@ class ChatCLI(cmd.Cmd):
         if self.conv.messages:
             self.conv.save()  # 自动保存旧对话
         self.conv = Conversation()
+        self.conv.system_prompt = self._default_system_prompt()
         self.current_image_path = None
         print("✅ 已创建新对话")
 
