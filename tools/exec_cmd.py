@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # tool: {"name": "exec_cmd", "description": "执行系统命令并返回输出结果"}
 import shlex
 import subprocess

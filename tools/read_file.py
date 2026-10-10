@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # tool: {"name": "read_file", "description": "读取指定路径的文件内容"}
 import os
 

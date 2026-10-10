@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # core/config.py
 """统一配置管理，从 config.yml 读取配置"""
 import os

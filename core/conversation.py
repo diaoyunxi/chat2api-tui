@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """对话管理：持久化保存/加载"""
 import json
 import os
