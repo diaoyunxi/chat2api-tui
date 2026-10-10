@@ -27,6 +27,10 @@ def load_config() -> Dict[str, Any]:
         return _config
 
     with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+    # 限制配置文件大小防止 DoS (CWE-400)
+    MAX_CONFIG_SIZE = 1 * 1024 * 1024  # 1MB
+    if os.path.getsize(config_path) > MAX_CONFIG_SIZE:
+        raise ValueError(f"配置文件过大: {os.path.getsize(config_path)} bytes > {MAX_CONFIG_SIZE}")
         cfg = yaml.safe_load(f) or {}
     # 合并默认值
     merged = DEFAULT_CONFIG.copy()
