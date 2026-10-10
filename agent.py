@@ -50,14 +50,22 @@ class Agent:
                     
                     # 如果是 stop 工具 → 任务完成，结束循环
                     if tool_name == self.stop_tool_name:
-                        args = json.loads(tc.function.arguments)
+                        try:
+                            args = json.loads(tc.function.arguments)
+                        except (json.JSONDecodeError, ValueError):
+                            args = {}
                         final_reason = args.get("reason", "任务已完成")
                         # 将 stop 工具结果也加入历史（便于记录）
                         conversation.add_tool_result(tc.id, f"任务完成: {final_reason}")
                         return f"✅ 任务已按计划完成: {final_reason}"
 
                     # 执行其他工具
-                    args = json.loads(tc.function.arguments)
+                    try:
+                        args = json.loads(tc.function.arguments)
+                    except (json.JSONDecodeError, ValueError) as parse_err:
+                        print(f"⚠️ 工具参数解析失败: {parse_err}")
+                        conversation.add_tool_result(tc.id, f"参数解析失败: {parse_err}")
+                        continue
                     print(f"🔧 调用工具: {tool_name}({args})")
                     result = self.tools.execute(tool_name, args)
                     conversation.add_tool_result(tc.id, result)
