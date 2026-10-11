@@ -2,6 +2,7 @@
 # tool: {"name": "write_file", "description": "将内容写入指定路径的文件"}
 import os
 
+
 def write_file(path: str, content: str) -> str:
     try:
         os.makedirs(os.path.dirname(path), exist_ok=True)
