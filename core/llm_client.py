@@ -2,7 +2,7 @@
 # core/llm_client.py
 import base64
 from openai import OpenAI
-from typing import List, Dict, Optional
+
 from core import config  # 新增
 
 class LLMClient:
@@ -17,8 +17,8 @@ class LLMClient:
             api_key=self.api_key
         )
 
-    def chat_completion(self, messages: List[Dict], model: str | None = None,
-                         tools: Optional[List[Dict]] = None, stream: bool = False):
+    def chat_completion(self, messages: list[dict], model: str | None = None,
+                         tools: list[dict] | None = None, stream: bool = False):
         if model is None:
             model = config.get("default_model")
         kwargs = {"model": model, "messages": messages, "stream": stream}

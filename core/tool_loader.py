@@ -4,13 +4,13 @@ import os
 import json
 import importlib.util
 import inspect
-from typing import Dict, Callable, Optional
+from collections.abc import Callable
 
 class ToolLoader:
     def __init__(self, tools_dir: str = "tools"):
         self.tools_dir = tools_dir
-        self._cache: Dict[str, Callable] = {}
-        self._schemas: Dict[str, Dict] = {}
+        self._cache: dict[str, Callable] = {}
+        self._schemas: dict[str, dict] = {}
         self.load_all()
 
     def _parse_header(self, filepath: str) -> Optional[Dict]:

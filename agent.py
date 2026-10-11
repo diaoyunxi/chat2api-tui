@@ -2,7 +2,7 @@
 # agent.py
 """智能体循环：必须调用 stop 工具才结束，否则强制继续"""
 import json
-from typing import List, Dict
+
 
 from core.llm_client import LLMClient
 from core.tool_loader import ToolLoader
@@ -97,7 +97,7 @@ class Agent:
             conversation.add_message("assistant", warning_msg)
         return warning_msg
 
-    def _ensure_stop_tool(self, tools_schema: List[Dict]) -> List[Dict]:
+    def _ensure_stop_tool(self, tools_schema: list[dict]) -> list[dict]:
         """确保 tools 列表中包含 stop 工具"""
         if not tools_schema:
             # 如果没有任何工具，只返回 stop 工具
