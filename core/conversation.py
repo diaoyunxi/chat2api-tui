@@ -3,7 +3,6 @@
 import json
 import os
 from datetime import datetime, timezone
-from typing import List, Dict, Optional
 
 DATA_DIR = "data/conversations"
 
@@ -11,11 +10,11 @@ class Conversation:
     def __init__(self, title: str = "新对话"):
         self.id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         self.title = title
-        self.messages: List[Dict] = []
-        self.system_prompt: Optional[str] = None
+        self.messages: list[dict] = []
+        self.system_prompt: str | None = None
         self.created_at = datetime.now(timezone.utc).isoformat()
 
-    def add_message(self, role: str, content: str, tool_calls: List | None = None):
+    def add_message(self, role: str, content: str, tool_calls: list | None = None):
         msg = {"role": role, "content": content}
         if tool_calls:
             msg["tool_calls"] = tool_calls
@@ -24,7 +23,7 @@ class Conversation:
     def add_tool_result(self, tool_call_id: str, content: str):
         self.messages.append({"role": "tool", "tool_call_id": tool_call_id, "content": content})
 
-    def to_openai_format(self) -> List[Dict]:
+    def to_openai_format(self) -> list[dict]:
         msgs = []
         if self.system_prompt:
             msgs.append({"role": "system", "content": self.system_prompt})
@@ -49,7 +48,7 @@ class Conversation:
 
     @classmethod
     def load(cls, filepath: str) -> "Conversation":
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             data = json.load(f)
         conv = cls(data["title"])
         conv.id = data["id"]
@@ -59,7 +58,7 @@ class Conversation:
         return conv
 
     @classmethod
-    def list_conversations(cls) -> List[str]:
+    def list_conversations(cls) -> list[str]:
         if not os.path.exists(DATA_DIR):
             return []
         return [f for f in os.listdir(DATA_DIR) if f.endswith(".json")]
