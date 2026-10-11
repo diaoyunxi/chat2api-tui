@@ -29,7 +29,7 @@ class LLMClient:
 
     # build_multimodal_message 保持不变
     @staticmethod
-    def build_multimodal_message(text: str, image_path: str | None = None, image_url: str | None = None) -> Dict:
+    def build_multimodal_message(text: str, image_path: str | None = None, image_url: str | None = None) -> dict:
         content = [{"type": "text", "text": text}]
         if image_path:
             with open(image_path, "rb") as f:

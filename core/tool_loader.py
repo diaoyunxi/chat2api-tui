@@ -13,7 +13,7 @@ class ToolLoader:
         self._schemas: dict[str, dict] = {}
         self.load_all()
 
-    def _parse_header(self, filepath: str) -> Optional[Dict]:
+    def _parse_header(self, filepath: str) -> dict | None:
         """读取文件头部 # tool: {...} 注释"""
         with open(filepath, "r", encoding="utf-8") as f:
             for raw_line in f:

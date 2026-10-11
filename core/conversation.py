@@ -12,10 +12,10 @@ class Conversation:
         self.id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         self.title = title
         self.messages: list[dict] = []
-        self.system_prompt: Optional[str] = None
+        self.system_prompt: str | None = None
         self.created_at = datetime.now(timezone.utc).isoformat()
 
-    def add_message(self, role: str, content: str, tool_calls: List | None = None):
+    def add_message(self, role: str, content: str, tool_calls: list | None = None):
         msg = {"role": role, "content": content}
         if tool_calls:
             msg["tool_calls"] = tool_calls
