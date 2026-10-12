@@ -109,7 +109,7 @@ class Agent:
                 return tools_schema
 
         # 否则添加 stop 工具
-        return tools_schema + [self._create_stop_tool()]
+        return [*tools_schema, self._create_stop_tool()]
 
     def _create_stop_tool(self) -> Dict:
         """创建 stop 工具的定义"""
