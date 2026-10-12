@@ -67,5 +67,5 @@ def exec_cmd(command: str) -> str:
         return "命令执行超时（30 秒）"
     except FileNotFoundError:
         return f"命令未找到: {args[0]}"
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - 兜底处理
         return f"命令执行失败: {type(e).__name__}"

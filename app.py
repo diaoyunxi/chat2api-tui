@@ -69,7 +69,7 @@ class ChatCLI(cmd.Cmd):
             print("🤖 AI: ", end="", flush=True)
             response = self.agent.run(self.conv, model=self.model)
             print(response)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - 顶层用户错误处理
             print(f"\n❌ 错误: {str(e)}")
 
     # ---------- 命令 ----------
