@@ -4,7 +4,10 @@ import os
 
 def write_file(path: str, content: str) -> str:
     try:
-        os.makedirs(os.path.dirname(path), exist_ok=True)
+        # 裸文件名（无目录部分）时 dirname 为 ''，os.makedirs('') 会抛 FileNotFoundError
+        dir_name = os.path.dirname(path)
+        if dir_name:
+            os.makedirs(dir_name, exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:
             f.write(content)
         return f"已成功写入: {path}"
