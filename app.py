@@ -70,7 +70,7 @@ class ChatCLI(cmd.Cmd):
             response = self.agent.run(self.conv, model=self.model)
             print(response)
         except Exception as e:
-            print(f"\n❌ 错误: {str(e)}")
+            print(f"\n❌ 错误: {e!s}")
 
     # ---------- 命令 ----------
     def do_new(self, arg):
