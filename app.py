@@ -34,6 +34,8 @@ class ChatCLI(cmd.Cmd):
         # 从配置读取默认模型
         self.model = config.get("default_model", "deepseek-v4-flash")
         self.supported_models = config.get("supported_models", ["deepseek-v4-flash", "deepseek-v4-pro"])
+        # 初始化对话对象，避免 __init__ 中引用未创建的 self.conv 导致 AttributeError
+        self.conv = Conversation()
         self.conv.system_prompt = self._default_system_prompt()
 
     @staticmethod
