@@ -32,7 +32,7 @@ class Agent:
             response = self.llm.chat_completion(
                 messages,
                 model=model,
-                tools=tools_with_stop if tools_with_stop else None
+                tools=tools_with_stop or None
             )
             choice = response.choices[0]
             msg = choice.message
