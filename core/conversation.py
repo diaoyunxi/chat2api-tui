@@ -41,10 +41,9 @@ class Conversation:
                 json.dump(self.__dict__, f, ensure_ascii=False, indent=2)
             os.replace(tmp_path, path)
         except Exception:
-            try:
+            import contextlib
+            with contextlib.suppress(OSError):
                 os.unlink(tmp_path)
-            except OSError:
-                pass
             raise
 
     @classmethod
