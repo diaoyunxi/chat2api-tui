@@ -57,6 +57,7 @@ def exec_cmd(command: str) -> str:
     try:
         result = subprocess.run(
             args,
+            check=False,
             shell=False,
             capture_output=True,
             text=True,
