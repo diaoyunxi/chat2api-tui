@@ -44,7 +44,7 @@ class ToolLoader:
         module = importlib.util.module_from_spec(spec)
         try:
             spec.loader.exec_module(module)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - 工具加载器需要捕获所有异常防止崩溃
             print(f"[ToolLoader] 加载工具模块 {filepath} 失败: {e}")
             return
 
@@ -104,7 +104,7 @@ class ToolLoader:
         try:
             result = self._cache[tool_name](**arguments)
             return str(result) if result is not None else "执行成功（无返回值）"
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - 工具执行需要捕获所有异常
             return f"工具执行错误: {type(e).__name__}"
 
     def reload(self):

@@ -12,5 +12,5 @@ def read_file(path: str) -> str:
         return "读取失败: 权限不足"
     except UnicodeDecodeError:
         return "读取失败: 文件不是有效的文本文件"
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - 兜底处理
         return f"读取失败: {type(e).__name__}"
