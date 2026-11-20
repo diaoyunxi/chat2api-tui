@@ -37,7 +37,7 @@ def exec_cmd(command: str) -> str:
     cmd_lower = command.lower().strip()
     for pattern in _DANGEROUS_PATTERNS:
         if pattern in cmd_lower:
-            return f"命令被拒绝：包含危险操作模式"
+            return "命令被拒绝：包含危险操作模式"
 
     # 使用 shlex 安全解析命令参数
     try:
