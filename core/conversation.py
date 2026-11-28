@@ -9,7 +9,9 @@ DATA_DIR = "data/conversations"
 
 class Conversation:
     def __init__(self, title: str = "新对话"):
-        self.id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        # 秒级精度会让同一秒内创建的两个会话共用文件名，save() 互相覆盖。
+        # 追加微秒，保持时间戳可读性的同时避免碰撞。
+        self.id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
         self.title = title
         self.messages: List[Dict] = []
         self.system_prompt: Optional[str] = None
