@@ -38,7 +38,11 @@ class Agent:
             msg = choice.message
 
             # ----- 情况1：检测到工具调用 -----
-            if choice.finish_reason == "tool_calls" and msg.tool_calls:
+            # 部分 OpenAI 兼容端点返回 tool_calls 时把 finish_reason 写成
+            # "stop" / None。只认 finish_reason 会丢掉整批工具调用，随后不断
+            # 追加「请调用 stop」的提示直到 max_iterations，任务永远无法完成。
+            # 以 message.tool_calls 是否存在为准。
+            if getattr(msg, "tool_calls", None):
                 # 将助手消息加入历史
                 if hasattr(msg, 'model_dump'):
                     conversation.messages.append(msg.model_dump())
